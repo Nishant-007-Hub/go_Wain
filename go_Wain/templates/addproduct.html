@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <style>
+
+</style>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <!-- <img src="image/image11.jpg" alt="numberz" width="218px" height="38px" style="margin-left: 100px; margin-top: 15px; float:left;display: inline-block;"> -->
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link" href="/product">Products</a>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link" href="/companydetails">Company Profile</a>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link" href="/contactus">Contact Us</a>
+            </li>
+            <li class="nav-item">
+                  <form method="post">
+              <a class="nav-link active" href="/addproduct">Add Product</a>
+                  </form>
+            </li>
+          </ul>
+          <button onclick = "document.location = '/';" type="button" class="btn btn-outline-light">Logout</button>
+        </div>
+      </nav>
+
+     <div class="container my-4">
+
+      <form method="post" action="#">
+        {% csrf_token %}
+  <div class="form-group">
+    <label for="product_name">product_name</label>
+    <input type="text" class="form-control" name="product_name" placeholder="Enter Your product_name Here">
+  </div>
+  <div class="form-group">
+    <label for="category">category</label>
+    <input type="text" class="form-control" name="category" placeholder="Enter Your category Here">
+  </div>
+  <div class="form-group">
+    <label for="brand_name">brand_name</label>
+    <input type="tel" class="form-control" name="brand_name" placeholder="Enter Your brand_name Here">
+  </div>
+<div class="form-group">
+    <label for="price">price</label>
+    <input type="tel" class="form-control" name="price" placeholder="Enter Your price Here">
+  </div>
+<div class="form-group">
+    <label for="image">Add image</label><br>
+   <input type="file" name="image" accept="image/*" id="id_image">
+  </div>
+
+  <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+</form>
+      </div>
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+
+
+
+

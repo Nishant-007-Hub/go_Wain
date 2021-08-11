@@ -1,0 +1,24 @@
+{% extends 'basic.html' %}
+{% block title %}<title> Contact Us </title> {% endblock %}
+
+{% block body %}
+<div class="container my-4">
+  <form method="POST" action="/contactus/"> {% csrf_token %}
+    <div class="form-group">
+      <label for="Name">Name</label>
+      <input type="text" class="form-control" name="name" placeholder="Enter Your Name Here">
+    </div>
+    <div class="form-group">
+      <label for="Email">Email</label>
+      <input type="email" class="form-control" name="email" placeholder="Enter Your Email Here">
+    </div>
+    <div class="form-group">
+      <label for="Contact">Contact Number</label>
+      <input type="tel" class="form-control" name="contact" placeholder="Enter Your Contact Here">
+    </div>
+
+    <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+{% endblock body %}

@@ -1,0 +1,194 @@
+{% extends 'basic.html' %}
+{% block title %}<title> Home </title> {% endblock %}
+
+<style>
+  .navbar navbar-expand-lg navbar-dark bg-primary {
+
+    position: fixed;
+    ;
+  }
+
+  #nav {
+
+    animation-name: navcolor;
+    animation-delay: 5s;
+    position: fixed;
+    top: 0;
+  }
+
+  @keyframes navcolor {
+    from {
+      background-color: blue;
+    }
+
+    to {
+
+      background-color: red;
+    }
+  }
+
+</style>
+{% block css %}
+
+{% endblock %}
+
+{% block body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb" style="font-family: cursive;">
+        <li class="breadcrumb-item"><a href="fashion/">Fashion</a></li>
+        <li class="breadcrumb-item"><a href="clothing/">Clothing</a></li>
+        <li class="breadcrumb-item"><a href="electronics/">Electronics</a></li>
+        <li class="breadcrumb-item"><a href="home_appliances/">Home Appliances</a></li>
+    </ol>
+</nav>
+
+<div class="row-md-1">
+    <div class="row" id="row">
+        {% for i in product %}
+        <div class="card container mt-1" id="card" style="width: 11rem;height: 11.5cm;">
+            <img alt="..." class="card-img-top" src='/media/{{i.image}}' style="height:125px">
+            <div class="card-body">
+                <h5 class="card-title" id="prnamecart{{i.id}}">{{i.product_name}}</h5>
+                <p class="card-text"><small>{{i.category}} <br>{{i.brand_name}}</small></p>
+                <p class="card-text">₹<span id="prnamepricecart{{i.id}}">{{i.price}}</span></p>
+            </div>
+            <div class="row">
+                <div class="col-sm-5" style=padding-left:2px;>
+                    <a href="/product/{{i.id}}">
+                        <button class="btn btn-primary" id="{{i.id}}"
+                                style=height:2cm;width:95px;background-color:rgb(74,111,233);>
+                            <b>Go to Details</b>
+                        </button>
+                    </a>
+                </div>
+
+                <span class="spancart" id="spancart{{i.id}}">
+          <button class="btn btn-warning btn-outline-black ml-4 mb-2 cart" id="cart{{i.id}}"
+                  style=height:2cm;width:95px;>
+            <h6>Add to Cart</h6>
+          </button>
+        </span>
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+</div><br><br><br>
+
+{% endblock body %}
+
+
+{% block js %}
+
+<script>
+
+  document.getElementById("home").setAttribute("class", "nav-link active")
+  document.getElementById("nav").setAttribute("class", "navbar navbar-expand-lg navbar-dark bg-primary")
+
+  if (localStorage.getItem('cart') == null) {
+    var cart = {};
+  }
+  else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    updateaddtocartbutton(cart);
+  }
+
+  $('.spancart').on("click", "button.cart", function () {
+    console.log('clicked');
+    var idstr = this.id.toString();
+    if (cart[idstr] == undefined) {
+      qty = 1;
+      name = document.getElementById("prname" + idstr).innerHTML;
+      price = document.getElementById("prnameprice" + idstr).innerHTML;
+      cart[idstr] = [qty, name, parseInt(price)];
+      console.log(cart[idstr]);
+      console.log(cart);
+    }
+    else {
+      qty = cart[idstr][0] + 1;
+    }
+    updateaddtocartbutton(cart);
+    localStorage.setItem('cart', JSON.stringify(cart));
+  });
+
+  function clearCart() {
+    console.log("ccart")
+    cart = JSON.parse(localStorage.getItem('cart'));
+    updatepopover(cart);
+    for (var item in cart) {
+      document.getElementById('span' + item).innerHTML = '<button style=height:2cm;width:95px; id="' + item + '" class="btn btn-warning btn-outline-black ml-4 mb-2 cart"><h6>Add to Cart</h6></button>'
+    }
+    localStorage.clear();
+    cart = {};
+    localStorage.setItem("cart", JSON.stringify(cart))
+  }
+
+  function updatepopover(cart) {
+    var popstr = "";
+    popstr = popstr + '<h5>Cart Items</h5><div class="mx-1 my-1">';
+    var i = 1;
+    // popover will not show qty:0 in popstring cart items for loop3
+    for (var item in cart) {
+      console.log(item)
+      if (cart[item][0] == 0) {
+        continue; 
+      }
+      else {
+        popstr = popstr + '<b>' + i + "." + ' </b>' + document.getElementById('prname' + item).innerHTML + " " + document.getElementById('prnameprice' + item).innerHTML + " Qty: " + cart[item][0] + '<br>';
+        i = i + 1;
+      }
+    }
+    popstr = popstr + `</div><div class="btn btn-primary my-1 ml-2" id="clearcart" onclick="clearCart()">ClearCart</div>`
+    document.getElementById('popovercart').setAttribute('data-content', popstr);
+    document.getElementById('popovercart').addEventListener("mouseover", function () {
+      $('#popovercart').popover('show');
+      document.getElementById("clearcart").addEventListener("click", clearCart)
+    });
+  }
+  function updateaddtocartbutton(cart) {
+    var sum = 0;
+    for (var item in cart) {
+      sum = sum + cart[item][0];
+      document.getElementById('span' + item).innerHTML = "<button id='minus" + item + "' class='btn btn-warning btn-outline-black ml-2 minus'>-</button> <span id='val" + item + "'><small>" + cart[item][0] + "</small></span> <button id='plus" + item + "'class='btn btn-warning btn-outline-black plus'>+</button>";
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    document.getElementById('cart').innerHTML = sum;
+    updatepopover(cart);
+  }
+
+  // plus & minus button working
+  $('.spancart').on("click", "button.minus", function () {
+    console.log("minus clicked")
+    a = this.id.slice(9,);
+    console.log("pressed product id is " + a);
+
+    cart['cart' + a][0] = cart['cart' + a][0] - 1;
+    cart['cart' + a][0] = Math.max(0, cart['cart' + a][0]);
+    document.getElementById('valcart' + a).innerHTML = cart['cart' + a][0]
+    updateaddtocartbutton(cart);
+
+    for (var item in cart) {
+      if (document.getElementById('val' + item).innerHTML == '<small>0</small>') {
+
+        document.getElementById('span' + item).innerHTML = '<button style=height:2cm;width:95px; id="' + item + '" class="btn btn-warning btn-outline-black ml-4 mb-2 cart"><h6>Add to Cart</h6></button>';
+        delete (cart[item]);
+        localStorage.setItem('cart', JSON.stringify(cart));
+      }
+    }
+  });
+
+  $('.spancart').on("click", "button.plus", function () {
+    console.log("plus clicked")
+    a = this.id.slice(8,);
+    console.log("pressed product id is " + a);
+    cart['cart' + a][0] = cart['cart' + a][0] + 1;
+    document.getElementById('valcart' + a).innerHTML = cart['cart' + a][0];
+    updateaddtocartbutton(cart);
+  });
+
+</script>
+
+{% endblock %}
+
+

@@ -1,0 +1,189 @@
+{% extends 'basic.html' %}
+{% block title %}<title> Tracker </title> {% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="col my-4">
+    <h4>Tracking Order</h4>
+    <form action="#" id="trackerform" method="POST">{% csrf_token %}
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="orderId">orderId</label>
+          <input class="form-control" id="orderId" name="orderId" placeholder="orderId" type="text">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="email">email</label>
+          <input class="form-control" id="email" name="Email" placeholder="Email" type="email">
+        </div>
+        <!-- <div class="form-group col-md-6">
+          <label for="email" class="form-label">Email address</label>
+          <input type="email" class="form-control" name="Email">
+        </div> -->
+
+        <button class="btn btn-primary" id="trackorder" type="submit">Track Order</button>
+      </div>
+    </form>
+
+    <div class="col my-3" id='ifempty'>
+      <h4>Order Status</h4>
+      <hr>
+      <ul class="list-group" id="itmjk">
+
+      </ul>
+      <br>
+      <h4>Cart Items</h4>
+      <hr>
+      <ul class="list-group" id="cartitems">
+
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+<script>
+
+  console.log("track")
+  // document.getElementById("trackerform").addEventListener("submit", function (e) {
+  //   let xhr = new XMLHttpRequest();
+
+  //   xhr.open("POST", "/track/", true)
+  //   // xhr.getResponseHeader('Content-type', 'application/json');
+
+  //   xhr.onload = function () {
+  //     try {
+  //       if (this.status === 200) {
+
+  //         // final = JSON.parse(this.responseText)
+  //         console.log(this.responseText)
+  //       }
+  //     }
+  //     catch (err) {
+  //       console.log(err)
+  //     }
+
+  //   }
+  //   param =
+  //   {
+  //     'orderId': $('input[name=orderId]').val(),
+  //     'email': $('input[name=Email]').val()
+  //     // 'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+  //   }
+  //   console.log(param)
+  //   xhr.send(param)
+  //   console.log("We are done!");
+  //   e.preventDefault();  
+  // });
+
+  // document.getElementById("trackerform").addEventListener("submit", function (e) {
+  //   // e.preventDefault();
+
+  //   data =
+  //    {
+  //     'orderId':  `${document.getElementById("orderId").value}` ,
+  //     'email':  `${document.getElementById("email").value}` 
+  //     // 'csrfmiddlewaretoken': '${document.getElementById("trackerform").firstChild.value}'
+  //   }
+
+  //   // id = $('input[name=orderId]').val()
+  //   // data =
+  //   // {
+  //   //   'orderId': parseInt(id),
+  //   //   'email': $('input[name=Email]').val(),
+  //   //   'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+
+  //   // }
+
+  //   // console.log(typeof document.getElementById("trackerform").firstChild.value)
+  //   console.log(data)
+  //   // console.log(typeof $('input[name=orderId]').val())
+
+  //   params = {
+  //     method: "POST",
+  //     body: data,
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     }
+  //   }
+  //   // console.log("ok1")
+  //   let url1 = '/track/'
+  //   // console.log(url1)
+
+  //   fetch(url1, params).then(response => response.text())
+  //     .then(data => console.log("this is data", data));
+  //   // console.log("ok2")
+  //   e.preventDefault();
+  // });
+
+  $('#trackerform').on("submit", function (e) {
+    $('#itmjk').empty();
+    $('#cartitems').empty();
+
+    formdata = {
+      'orderId': $('input[name=orderId]').val(),
+      'email': $('input[name=Email]').val(),
+      'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+    }
+
+    console.log(formdata)
+    $.ajax({
+      type: 'POST',
+      url: '/track/',
+      data: formdata,
+      encode: true
+    })
+      // console.log("after ajax")
+      //     .readyState(function(){
+      //     alert("onload")
+      // })
+      .done(function (data) {
+         console.log(data, " this is data");
+        // console.log("after .done");
+        data = JSON.parse(data);
+        updates = data["updates"];
+        // let updates = data;
+          console.log(updates, " this is updates")
+        if (data["status"]=="success") {
+          for (i = 0; i < updates.length; i++) {
+            let text = updates[i]['text'];
+            let time = updates[i]['time'];
+            mystr = `<li class="list-group-item d-flex justify-content-between align-items-center"> ${text} <span class="badge badge-primary badge-pill">${time}</span></li>`
+            $('#itmjk').append(mystr);
+          }
+
+        cartitems = JSON.parse(data["items_json"])
+        console.log(cartitems);
+        
+        for (item in cartitems) {
+          let itemname = cartitems[item][1]
+          let qty = cartitems[item][0]
+          // console.log(itemname);
+          mystr = `<li class="list-group-item d-flex justify-content-between align-items-center"> ${itemname} <span class="badge badge-primary badge-pill">${qty}</span></li>`
+            $('#cartitems').append(mystr);
+          
+        }
+
+        }
+
+        else {
+          mystr = `<li class="list-group-item d-flex justify-content-between align-items-center"> sorry NO data available for this request </li>`
+          $('#itmjk').append(mystr);
+          $('#cartitems').append(mystr);
+        }
+
+      });
+
+    // .fail(function() {
+    //   alert("could not get data")
+    // });
+
+    e.preventDefault();
+  })
+
+
+
+</script>
+
+{% endblock js %}
