@@ -2,6 +2,8 @@
 {% block title %}<title> Contact Us </title> {% endblock %}
 
 {% block body %}
+<main role="main">
+
 <div class="container my-4">
   <form method="POST" action="/contactus/"> {% csrf_token %}
     <div class="form-group">
@@ -22,3 +24,10 @@
 </div>
 
 {% endblock body %}
+
+{% block js %}
+<script>
+document.getElementById("contact").setAttribute("class","nav-link active")
+</script>
+
+{% endblock js %}

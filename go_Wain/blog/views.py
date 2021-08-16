@@ -5,7 +5,7 @@ from .models import Blogpost
 
 def index(request):
     data = Blogpost.objects.all()
-    print(data, "this is data")
+    # print(data, "this is data")
     return render(request, 'blog/index.html', {"param": data})
 
 

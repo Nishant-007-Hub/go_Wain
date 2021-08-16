@@ -10,9 +10,10 @@
     ;
   }
 </style>
-{% endblock %}
+{% endblock css%}
 
 {% block body %}
+
 
 
 <!--      
@@ -28,6 +29,7 @@
     <li class="breadcrumb-item"><a href="{% url 'shop:clothing' %} "><b>Clothing</b></a></li>
     <li class="breadcrumb-item"><a href="{% url 'shop:electronics' %} ">Electronics</a></li>
     <li class="breadcrumb-item"><a href="{% url 'shop:home_appliances' %} ">Home Appliances</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'shop:automotive' %} ">Automotive</a></li>
   </ol>
 </nav>
 
@@ -213,7 +215,7 @@
     var sum = 0;
     for (var item in cart) {
       sum = sum + cart[item][0];
-      // console.log(cart[item]);
+      console.log(cart[item]);
       // if (cart[item] == 0) {
       //   cart = cart - cart[item];
       //   continue;

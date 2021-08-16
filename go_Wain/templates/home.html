@@ -26,7 +26,6 @@
       background-color: red;
     }
   }
-
 </style>
 {% block css %}
 
@@ -34,46 +33,46 @@
 
 {% block body %}
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb" style="font-family: cursive;">
-        <li class="breadcrumb-item"><a href="fashion/">Fashion</a></li>
-        <li class="breadcrumb-item"><a href="clothing/">Clothing</a></li>
-        <li class="breadcrumb-item"><a href="electronics/">Electronics</a></li>
-        <li class="breadcrumb-item"><a href="home_appliances/">Home Appliances</a></li>
-    </ol>
+  <ol class="breadcrumb" style="font-family: cursive;">
+    <li class="breadcrumb-item"><a href="fashion/">Fashion</a></li>
+    <li class="breadcrumb-item"><a href="clothing/">Clothing</a></li>
+    <li class="breadcrumb-item"><a href="electronics/">Electronics</a></li>
+    <li class="breadcrumb-item"><a href="home_appliances/">Home Appliances</a></li>
+    <li class="breadcrumb-item"><a href="automotive/">Automotive</a></li>
+  </ol>
 </nav>
 
 <div class="row-md-1">
-    <div class="row" id="row">
-        {% for i in product %}
-        <div class="card container mt-1" id="card" style="width: 11rem;height: 11.5cm;">
-            <img alt="..." class="card-img-top" src='/media/{{i.image}}' style="height:125px">
-            <div class="card-body">
-                <h5 class="card-title" id="prnamecart{{i.id}}">{{i.product_name}}</h5>
-                <p class="card-text"><small>{{i.category}} <br>{{i.brand_name}}</small></p>
-                <p class="card-text">₹<span id="prnamepricecart{{i.id}}">{{i.price}}</span></p>
-            </div>
-            <div class="row">
-                <div class="col-sm-5" style=padding-left:2px;>
-                    <a href="/product/{{i.id}}">
-                        <button class="btn btn-primary" id="{{i.id}}"
-                                style=height:2cm;width:95px;background-color:rgb(74,111,233);>
-                            <b>Go to Details</b>
-                        </button>
-                    </a>
-                </div>
+  <div class="row" id="row">
+    {% for i in product %}
+    <div class="card container mt-1" id="card" style="width: 11rem;height: 11.5cm;">
+      <img alt="..." class="card-img-top" src='/media/{{i.image}}' style="height:125px">
+      <div class="card-body">
+        <h5 class="card-title" id="prnamecart{{i.id}}">{{i.product_name}}</h5>
+        <p class="card-text"><small>{{i.category}} <br>{{i.brand_name}}</small></p>
+        <p class="card-text">₹<span id="prnamepricecart{{i.id}}">{{i.price}}</span></p>
+      </div>
+      <div class="row">
+        <div class="col-sm-5" style=padding-left:2px;>
+          <a href="/product/{{i.id}}">
+            <button class="btn btn-primary" id="{{i.id}}" style=height:2cm;width:95px;background-color:rgb(74,111,233);>
+              <b>Go to Details</b>
+            </button>
+          </a>
+        </div>
 
-                <span class="spancart" id="spancart{{i.id}}">
+        <span class="spancart" id="spancart{{i.id}}">
           <button class="btn btn-warning btn-outline-black ml-4 mb-2 cart" id="cart{{i.id}}"
-                  style=height:2cm;width:95px;>
+            style=height:2cm;width:95px;>
             <h6>Add to Cart</h6>
           </button>
         </span>
-            </div>
-        </div>
-
-        {% endfor %}
-
+      </div>
     </div>
+
+    {% endfor %}
+
+  </div>
 </div><br><br><br>
 
 {% endblock body %}
@@ -122,8 +121,11 @@
     localStorage.clear();
     cart = {};
     localStorage.setItem("cart", JSON.stringify(cart))
-  }
+    document.getElementById('popovercart').setAttribute('data-content', " ");
 
+     
+    // updatepopover(cart);
+  }
   function updatepopover(cart) {
     var popstr = "";
     popstr = popstr + '<h5>Cart Items</h5><div class="mx-1 my-1">';
@@ -132,7 +134,7 @@
     for (var item in cart) {
       console.log(item)
       if (cart[item][0] == 0) {
-        continue; 
+        continue;
       }
       else {
         popstr = popstr + '<b>' + i + "." + ' </b>' + document.getElementById('prname' + item).innerHTML + " " + document.getElementById('prnameprice' + item).innerHTML + " Qty: " + cart[item][0] + '<br>';
@@ -190,5 +192,3 @@
 </script>
 
 {% endblock %}
-
-

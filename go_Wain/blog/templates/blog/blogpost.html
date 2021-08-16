@@ -1,10 +1,12 @@
-{% extends 'blog/basic.html' %}
+{% extends 'C:\Users\Nishant\Desktop\pycharm\personalproject\go-Wain\go_Wain\templates\basic.html' %}
 
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v9.0"
+  nonce="QyafncjW"></script>
 {% block body %}
 <div class="container">
   <div class="row">
     <div class="col-md-8">
-      <h3 class="pb-4 mb-4 fst-italic border-bottom">
+      <h3 class=" my-3 pb-4 mb-4 fst-italic border-bottom">
         {{param.title}}
       </h3>
       <input type="hidden" id="count" value={{length}}>
@@ -24,11 +26,13 @@
         <h3>{{param.head2}}</h3>
         <p>{{param.chead2}}</p>
       </article>
-      <div class="fb-like" data-href="http://127.0.0.1:8000/blog/blogpost/{{param.post_id}}" data-width="" data-layout="button_count" data-action="like" data-size="large" data-share="true"></div>
+      <div class="fb-like" data-href="http://127.0.0.1:8000/blog/blogpost/{{param.post_id}}" data-width=""
+        data-layout="button_count" data-action="like" data-size="large" data-share="true"></div>
     </div>
   </div>
-  
-  <div class="fb-comments" data-href="http://127.0.0.1:8000/blog/blogpost/{{param.post_id}}" data-width="" data-numposts="5"></div>
+
+  <div class="fb-comments" data-href="http://127.0.0.1:8000/blog/blogpost/{{param.post_id}}" data-width=""
+    data-numposts="5"></div>
 </div>
 <div class="container row">
   <button style="margin-left: 2%;" id="prev" class="btn btn-primary mb-3">&#8592 Prev Blog</button>
@@ -60,6 +64,5 @@
       window.location.href = ` ${b + 1} `
     }
   })
-
 </script>
 {% endblock js %}

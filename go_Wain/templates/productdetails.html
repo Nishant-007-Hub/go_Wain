@@ -15,10 +15,22 @@ position: fixed ;;
 <div class="container mt-2">
   <div class="row">
     <div class="col-md-4">
-
+{% comment %} {% for i in product  %} {% endcomment %}
       <img src="/media/{{product.image}}" width="300px" height="250px">
-      <a href= "/checkout"><button class="btn btn-light my-4 ml-3 " title="Buy Now">Buy Now</a></button>
-      <button class="btn btn-warning btn-outline-black my-4 ml-2 cart" id="cart{{i.id}}" title="Add to Cart">Add to cart</button>
+      <button onclick="document.location= '/checkout'" type="button" title="Buy Now" class="btn btn-success">Buy Now</button>
+{% comment %} <button type="button" class="btn btn-success" >Buy Now</a></button> {% endcomment %}
+      {% comment %} <button class="btn btn-warning btn-outline-black my-4 ml-2 cart" id="cart{{i.id}}" title="Add to Cart">Add to cart</button> {% endcomment %}
+      
+      <span id="spancart{{product.id}}" class="spancart">
+          <button style=height:2cm;width:95px; id="cart{{product.id}}"
+            class="btn btn-warning btn-outline-black ml-4 mb-2 cart my-3">
+            <h6>Add to Cart</h6>
+          </button>
+        </span>
+<br>
+      <input type="hidden" class="card-title" id="prnamecart{{product.id}}"></input>
+        <p type="hidden" class="card-text"><small> <br></small></p>
+        <p type="hidden" class="card-text"><span id="prnamepricecart{{product.id}}"></span></p>
     </div>
 
     <div class="col-md-8">
@@ -26,52 +38,127 @@ position: fixed ;;
       <h5>{{product.product_name}}</h5>
       <h5>₹{{product.price}}</h5>
       <h5>{{product.category}}</h5>
-
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa porro unde, nobis, dicta delectus nostrum
-        eligendi aperiam blanditiis adipisci fugiat similique assumenda minus nulla minima iure. Fugiat odit possimus
-        voluptates, officia eos aspernatur voluptas?</p>
-
-
     </div>
   </div>
   {% endblock %}
   {% block js %}
   <script>
     
-    document.getElementById("nav").setAttribute("class", "navbar navbar-expand-lg navbar-dark bg-primary")
 
-    if (localStorage.getItem('cart') == null) {
+  if (localStorage.getItem('cart') == null) {
     var cart = {};
   }
   else {
     cart = JSON.parse(localStorage.getItem('cart'));
-    document.getElementById('cart').innerHTML = Object.keys(cart).length;
-    console.log("ih");
-    console.log(Object.keys);
-    console.log(Object.keys(cart));
-    console.log(Object.keys(cart).length);
-    console.log("ih");
-  }
+    console.log(cart, "parsed cart");
+    updateaddtocartbutton(cart);
   
-  $('.cart').click(function(){
+  }
+
+  // $('.cart').click(function () {
+  $('.spancart').on("click", "button.cart", function () {
     console.log('clicked');
     var idstr = this.id.toString();
-    console.log(idstr);
-    if (cart[idstr] == undefined){
-      cart[idstr] = 1;
+    if (cart[idstr] == undefined) {
+      qty = 1;
+      name = document.getElementById("prname" + idstr).innerHTML;
+      price = document.getElementById("prnameprice" + idstr).innerHTML;
+      // idstr value is cart1,cart2 and so on
+      cart[idstr] = [qty, name, parseInt(price)];
+      console.log(cart[idstr]);
+      console.log(cart);
     }
-    else{
-      cart[idstr] = cart[idstr] + 1;
+    else {
+      qty = cart[idstr][0] + 1;
     }
-    console.log(Object.keys(cart[idstr]).length);
-    // console.log(cart);
+    updateaddtocartbutton(cart);
     localStorage.setItem('cart', JSON.stringify(cart));
-});
-$('#popovercart').popover();
-document.getElementById('popovercart').setAttribute('data-content','<h5>Cart Items</h5>');  
+  });
+
+  function clearCart() {
+    console.log("ccart")
+    cart = JSON.parse(localStorage.getItem('cart'));
+    for (var item in cart) {
+      document.getElementById('span' + item).innerHTML = '<button style=height:2cm;width:95px; id="' + item + '" class="btn btn-primary ml-4 mb-2 cart"><h6>Add to Cart</h6></button>'
+    }
+    localStorage.clear();
+    cart = {};
+    localStorage.setItem("cart", JSON.stringify(cart))
+    updatepopover(cart);
+  }
+
+  function updatepopover(cart) {
+    var popstr = "";
+    popstr = popstr + '<h5>Cart Items</h5><div class="mx-1 my-1">';
+    var i = 1;
+    // popover will not show qty:0 in popstring cart items for loop3
+    for (var item in cart) {
+      console.log(item)
+      if (cart[item][0] == 0) {
+        continue; 
+      }
+      else {
+        popstr = popstr + '<b>' + i + "." + ' </b>' + document.getElementById('prname' + item).innerHTML + " " + document.getElementById('prnameprice' + item).innerHTML + " Qty: " + cart[item][0] + '<br>';
+        i = i + 1;
+      }
+    }
+    popstr = popstr + `</div><div class="btn btn-primary my-1 ml-2" id="clearcart" onclick="clearCart()">ClearCart</div>`
+
+    document.getElementById('popovercart').setAttribute('data-content', popstr);
+    // $('#popovercart').popover();
+    document.getElementById('popovercart').addEventListener("mouseover", function () {
+      $('#popovercart').popover('show');
+      document.getElementById("clearcart").addEventListener("click", clearCart)
+    });
+  }
+//  $('#clearcart').on("click", clearCart());
+  function updateaddtocartbutton(cart) {
+    var sum = 0;
+    for (var item in cart) {
+      sum = sum + cart[item][0];
+      document.getElementById('span' + item).innerHTML = "<button id='minus" + item + "' class='btn btn-warning btn-outline-black ml-2 minus'>-</button> <span id='val" + item + "'><small>" + cart[item][0] + "</small></span> <button id='plus" + item + "'class='btn btn-warning btn-outline-black plus'>+</button>";
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    document.getElementById('cart').innerHTML = sum;
+    updatepopover(cart);
+  }
+
+  // plus & minus button working
+  $('.spancart').on("click", "button.minus", function () {
+    console.log("minus clicked")
+    a = this.id.slice(9,);
+    console.log("pressed product id is " + a);
+
+    cart['cart' + a][0] = cart['cart' + a][0] - 1;
+    cart['cart' + a][0] = Math.max(0, cart['cart' + a][0]);
+    document.getElementById('valcart' + a).innerHTML = cart['cart' + a][0]
+    updateaddtocartbutton(cart);
+
+    for (var item in cart) {
+
+      if (document.getElementById('val' + item).innerHTML == '<small>0</small>') {
+
+        document.getElementById('span' + item).innerHTML = '<button style=height:2cm;width:95px; id="' + item + '" class="btn btn-warning btn-outline-black ml-4 mb-2 cart"><h6>Add to Cart</h6></button>';
+        delete (cart[item]);
+        localStorage.setItem('cart', JSON.stringify(cart));
+      }
+    }
+  });
+  // updateaddtocartbutton(cart);
+
+  $('.spancart').on("click", "button.plus", function () {
+    console.log("plus clicked")
+    a = this.id.slice(8,);
+    console.log("pressed product id is " + a);
+    cart['cart' + a][0] = cart['cart' + a][0] + 1;
+    document.getElementById('valcart' + a).innerHTML = cart['cart' + a][0];
+    updateaddtocartbutton(cart);
+  });
+
 
 
 </script>
+
   
 
 {% endblock %}

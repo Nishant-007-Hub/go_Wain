@@ -1,3 +1,4 @@
+from blog.models import Blogpost
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -157,7 +158,10 @@ def home_appliances(request):
     hi = {"hello": category4}
     return render(request, 'home_appliances.html', hi)
 
-
+def automotive(request):
+    category5 = Product.objects.filter(category="Automotive")
+    hi = {"hello":category5}
+    return render(request, "automotive.html", hi)
 ############  ProductDetailView  ##############
 
 # @method_decorator(only_superuser_allow, name = 'dispatch')
@@ -166,8 +170,9 @@ def home_appliances(request):
 
 def productdetail(request, myid):
     product = Product.objects.get(id=myid)
-    # print(product)
-    return render(request, 'productdetails.html', {'product': product})
+    allproduct = Product.objects.all()
+    # print(product.id, "productssss")
+    return render(request, 'productdetails.html', {'product': product, "allproduct": allproduct})
 
 
 class productdetailview(DetailView):
