@@ -28,15 +28,15 @@ position: fixed ;;
           </button>
         </span>
 <br>
-      <input type="hidden" class="card-title" id="prnamecart{{product.id}}"></input>
+      {% comment %} <input type="hidden" class="card-title" id="prnamecart{{product.id}}"></input> {% endcomment %}
         <p type="hidden" class="card-text"><small> <br></small></p>
-        <p type="hidden" class="card-text"><span id="prnamepricecart{{product.id}}"></span></p>
+        {% comment %} <p type="hidden" class="card-text"><span id="prnamepricecart{{product.id}}"></span></p> {% endcomment %}
     </div>
 
     <div class="col-md-8">
       <h5>{{product.brand_name}}</h5>
-      <h5>{{product.product_name}}</h5>
-      <h5>₹{{product.price}}</h5>
+      <h5 id="prnamecart{{product.id}}">{{product.product_name}}</h5>
+      <h5 id="prnamepricecart{{product.id}}">₹{{product.price}}</h5>
       <h5>{{product.category}}</h5>
     </div>
   </div>
@@ -61,8 +61,11 @@ position: fixed ;;
     var idstr = this.id.toString();
     if (cart[idstr] == undefined) {
       qty = 1;
+      console.log(idstr, "idstr");
       name = document.getElementById("prname" + idstr).innerHTML;
-      price = document.getElementById("prnameprice" + idstr).innerHTML;
+      {% comment %} name = document.getElementById("nameofproduct").innerHTML; {% endcomment %}
+      price = document.getElementById("prnameprice" + idstr).innerHTML.slice(1,);
+      {% comment %} price = document.getElementById("priceofproduct").innerHTML.slice(1,); {% endcomment %}
       // idstr value is cart1,cart2 and so on
       cart[idstr] = [qty, name, parseInt(price)];
       console.log(cart[idstr]);
@@ -115,6 +118,7 @@ position: fixed ;;
   function updateaddtocartbutton(cart) {
     var sum = 0;
     for (var item in cart) {
+      console.log(item,"itemm")
       sum = sum + cart[item][0];
       document.getElementById('span' + item).innerHTML = "<button id='minus" + item + "' class='btn btn-warning btn-outline-black ml-2 minus'>-</button> <span id='val" + item + "'><small>" + cart[item][0] + "</small></span> <button id='plus" + item + "'class='btn btn-warning btn-outline-black plus'>+</button>";
     }

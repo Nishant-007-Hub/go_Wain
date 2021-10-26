@@ -18,6 +18,7 @@ def signin(request):
 
 
 def signup(request):
+    print("here")
     if request.method == 'POST':
         # get the post parameters
         username = request.POST["username"]
